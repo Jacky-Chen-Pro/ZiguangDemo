@@ -21,7 +21,7 @@ apt {
         // you should set your package name here if you are using different application IDs
         // resourcePackageName "your.package.name"
 
-        // You can set optional annotation processing options here, like these commented options:
+        // You can set optional annotation processing options here, like these commented ffoptions:
         // logLevel 'INFO'
         // logFile '/var/log/aa.log'
     }
