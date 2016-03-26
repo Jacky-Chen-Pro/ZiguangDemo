@@ -3,15 +3,9 @@ package com.boyu100.boyoforandroidpad.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.bm.library.PhotoView;
 import com.boyu100.boyoforandroidpad.R;
-import com.boyu100.boyoforandroidpad.adapter.PicsInfoAdapter;
 import com.boyu100.boyoforandroidpad.base.AppApplication;
 import com.boyu100.boyoforandroidpad.bean.PicInfoArrayBean;
 import com.squareup.picasso.Picasso;
@@ -30,7 +24,6 @@ public class PicInfoFragment extends Fragment {
     @ViewById
     PhotoView img;
 
-    private int imgId;
     private PicInfoArrayBean mBean;
 
     @Override
@@ -39,7 +32,7 @@ public class PicInfoFragment extends Fragment {
         mBean = (PicInfoArrayBean) getArguments().getSerializable("picBean");
     }
 
-    public static PicInfoFragment_ getPicInfoFragment(PicInfoArrayBean picBean) {
+    public static PicInfoFragment getPicInfoFragment(PicInfoArrayBean picBean) {
         PicInfoFragment_ fragment_ = new PicInfoFragment_();
         Bundle bundle = new Bundle();
         bundle.putSerializable("picBean", picBean);
@@ -49,8 +42,8 @@ public class PicInfoFragment extends Fragment {
 
     @AfterViews
     void initImg(){
-//        img.setImageResource(imgId);
-        Picasso.with(getActivity()).load(new File(AppApplication.getExternalSdPath() + mBean.getPicPath())).into(img);
+        String path = AppApplication.getExternalSdPath() + mBean.getPicPath();
+        Picasso.with(getActivity()).load(new File(path)).into(img);
         img.enable();
     }
 

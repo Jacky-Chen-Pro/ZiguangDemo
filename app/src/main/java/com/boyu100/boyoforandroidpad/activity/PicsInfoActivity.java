@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -86,6 +87,7 @@ public class PicsInfoActivity extends FragmentActivity{
 
     @AfterViews
     void initPicsInfo() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mAdapter = new PicsInfoAdapter(getSupportFragmentManager(), mBean.getHomeInfoArray());
         viewpager.setAdapter(mAdapter);
 

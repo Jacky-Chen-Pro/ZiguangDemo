@@ -8,15 +8,17 @@
         android:icon="@mipmap/ic_launcher" android:supportsRtl="true"
         android:name=".base.AppApplication"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.ChooseMachineActivity_">
+        <activity
+            android:screenOrientation="landscape"
+            android:name="com.boyu100.boyoforandroidpad.activity.ChooseMachineActivity_">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.HomeActivity_"/>
-        <activity android:name=".activity.PicsInfoActivity_"/>
+        <activity android:name="com.boyu100.boyoforandroidpad.activity.HomeActivity_"  android:screenOrientation="landscape"/>
+        <activity android:name="com.boyu100.boyoforandroidpad.activity.PicsInfoActivity_"  android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

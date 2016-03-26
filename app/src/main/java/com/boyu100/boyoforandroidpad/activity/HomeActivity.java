@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -41,6 +42,7 @@ public class HomeActivity extends FragmentActivity {
 
     @AfterViews
     void doHandleData() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mHomeInfoArrayBean = AppApplication.getHomeInfoArray(Integer.valueOf(AppApplication.getSPValue(Constants.SP_VALUE_MACHINE)));
         Picasso.with(HomeActivity.this).load(new File(Environment.getExternalStorageDirectory() + mHomeInfoArrayBean.get(0).getHomePicPath())).into(background);
     }
@@ -53,11 +55,11 @@ public class HomeActivity extends FragmentActivity {
 
     @Click(R.id.first)
     void goFirstInfoActivity() {
-        PicsInfoActivity_.goPicsInfoActivity(this, mHomeInfoArrayBean.get(0));
+        PicsInfoActivity.goPicsInfoActivity(this, mHomeInfoArrayBean.get(0));
     }
 
     @Click(R.id.second)
     void goSecondInfoActivity() {
-        PicsInfoActivity_.goPicsInfoActivity(this,mHomeInfoArrayBean.get(1));
+        PicsInfoActivity.goPicsInfoActivity(this,mHomeInfoArrayBean.get(1));
     }
 }

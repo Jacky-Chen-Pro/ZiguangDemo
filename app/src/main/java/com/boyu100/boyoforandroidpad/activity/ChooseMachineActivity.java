@@ -1,46 +1,37 @@
 package com.boyu100.boyoforandroidpad.activity;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
-import android.test.UiThreadTest;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.boyu100.boyoforandroidpad.R;
 import com.boyu100.boyoforandroidpad.base.AppApplication;
 import com.boyu100.boyoforandroidpad.base.Constants;
-import com.boyu100.boyoforandroidpad.bean.HomeInfoArrayBean;
 import com.boyu100.boyoforandroidpad.bean.MachineArrayBean;
+import com.boyu100.boyoforandroidpad.utils.StringUtils;
 import com.boyu100.boyoforandroidpad.utils.ToastUtils;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
-import org.androidannotations.annotations.NoTitle;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Jacky on 2016/3/12.
  */
 
-@NoTitle
 @Fullscreen
 @EActivity(R.layout.activity_choose_machine)
 public class ChooseMachineActivity extends FragmentActivity{
@@ -60,8 +51,8 @@ public class ChooseMachineActivity extends FragmentActivity{
     @Click(R.id.ok)
     void goHomeActivity() {
         try {
-            mMachineId = Integer.parseInt(position.getText().toString().trim());
 
+            mMachineId = Integer.parseInt(position.getText().toString().trim());
             if(isInMachineList(mMachineId)) {
                 ((AppApplication) AppApplication.context()).setSPValue(Constants.SP_VALUE_MACHINE, mMachineId + "");
                 ((AppApplication) AppApplication.context()).setSPValue(Constants.SP_VALUE_DATA, mJson);
@@ -72,30 +63,50 @@ public class ChooseMachineActivity extends FragmentActivity{
 
         }catch (Exception e) {
             e.printStackTrace();
-            ToastUtils.showShorToast("请输入正确的数字");
+            ToastUtils.showShorToast("您输入的数字有误，或者json格式有问题");
         }
     }
     @AfterViews
     void showProgressAndGetDate() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        showProgress();
         getAllDate();
+        hideProgress();
     }
 
     @Background
     void getAllDate() {
-        showProgress();
-
         Gson gson = new Gson();
-        mJson = readLocalJson();
-        mMachineInfo = gson.fromJson(mJson, MachineArrayBean.class);
 
-        for(int i=0; i< mMachineInfo.getMachineArray().size(); i++) {
-            Log.i("machineBean[" + i + "]", mMachineInfo.getMachineArray().get(i).toString());
+        try {
+            mJson = readLocalJson();
+            mMachineInfo = gson.fromJson(mJson, MachineArrayBean.class);
+
+            for(int i=0; i< mMachineInfo.getMachineArray().size(); i++) {
+                Log.i("machineBean[" + i + "]", mMachineInfo.getMachineArray().get(i).toString());
+            }
+
+            if(StringUtils.isNotEmpty(AppApplication.getSPValue(Constants.SP_VALUE_MACHINE))) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        position.setText(Integer.valueOf(AppApplication.getSPValue(Constants.SP_VALUE_MACHINE)) + "");
+                        position.setSelection(position.getText().toString().length());
+                    }
+                });
+                HomeActivity.goHomeActivity(this);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ToastUtils.showShorToast("您的json文件格式有问题");
+                }
+            });
         }
-
-        hideProgress();
     }
 
-    @UiThread
     void hideProgress() {
         if(mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
@@ -103,7 +114,6 @@ public class ChooseMachineActivity extends FragmentActivity{
         }
     }
 
-    @UiThread
     void showProgress() {
         if(mProgressDialog == null) {
             mProgressDialog = ProgressDialog.show(ChooseMachineActivity.this,null,"loading...");
